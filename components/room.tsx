@@ -21,7 +21,7 @@ export const Room = ({
   return (
     <RoomProvider 
       id={roomId} 
-      initialPresence={{}}
+      initialPresence={{cursor:null}}
     //   initialStorage={{
     //     layers: new LiveMap<string, LiveObject<Layer>>(),
     //     layerIds: new LiveList(),
