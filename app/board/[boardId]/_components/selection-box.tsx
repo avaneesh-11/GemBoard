@@ -1,31 +1,46 @@
 "use client";
-
-import { useSelectionBounds } from "@/hooks/use-selection-bounds";
-import { useSelf, useStorage } from "@/liveblocks.config";
-import { LayerType, Side, XYWH } from "@/types/canvas";
 import { memo } from "react";
 
-interface SelectionBoxProps{
-    onResizeHandlePointerDown:(corner:Side,initialBounce:XYWH)=>void
-}
+import { LayerType, Side, XYWH } from "@/types/canvas";
+import { useSelf, useStorage } from "@/liveblocks.config";
+import { useSelectionBounds } from "@/hooks/use-selection-bounds";
 
-const HANDLE_WIDTH=8
+interface SelectionBoxProps {
+  onResizeHandlePointerDown: (corner: Side, initialBounds: XYWH) => void;
+};
 
-export const SelectionBox=memo(({onResizeHandlePointerDown}:SelectionBoxProps)=>{
-    const soleLayerId=useSelf((me)=>me.presence.selection.length===1?me.presence.selection[0]:null);
+const HANDLE_WIDTH = 8;
 
-    const isShowingHandles=useStorage((root)=>soleLayerId && root.layers.get(soleLayerId)?.type!== LayerType.Path);
+export const SelectionBox = memo(({
+  onResizeHandlePointerDown,
+}: SelectionBoxProps) => {
+  const soleLayerId = useSelf((me) =>
+    me.presence.selection.length === 1 ? me.presence.selection[0] : null
+  );
 
-    const bounds=useSelectionBounds()
+  const isShowingHandles = useStorage((root) => 
+    soleLayerId && root.layers.get(soleLayerId)?.type !== LayerType.Path
+  );
 
-    if(!bounds) return null;
+  const bounds = useSelectionBounds();
 
-    return(
-        <>
-        <rect className="fill-transparent stroke-blue-500 stroke-1 pointer-events-none" 
-        style={{transform:`translate(${bounds.x}px,${bounds.y}px)`}} x={0} y={0} width={bounds.width} height={bounds.height} 
-        />
-        {isShowingHandles && (
+  if (!bounds) {
+    return null;
+  }
+
+  return (
+    <>
+      <rect
+        className="fill-transparent stroke-blue-500 stroke-1 pointer-events-none"
+        style={{
+          transform: `translate(${bounds.x}px, ${bounds.y}px)`,
+        }}
+        x={0}
+        y={0}
+        width={bounds.width}
+        height={bounds.height}
+      />
+      {isShowingHandles && (
         <>
           <rect
             className="fill-white stroke-1 stroke-blue-500"
@@ -44,7 +59,7 @@ export const SelectionBox=memo(({onResizeHandlePointerDown}:SelectionBoxProps)=>
             }}
             onPointerDown={(e) => {
               e.stopPropagation();
-            //   onResizeHandlePointerDown(Side.Top + Side.Left, bounds);
+              onResizeHandlePointerDown(Side.Top + Side.Left, bounds);
             }}
           />
           <rect
@@ -64,7 +79,7 @@ export const SelectionBox=memo(({onResizeHandlePointerDown}:SelectionBoxProps)=>
             }}
             onPointerDown={(e) => {
               e.stopPropagation();
-            //   onResizeHandlePointerDown(Side.Top, bounds);
+              onResizeHandlePointerDown(Side.Top, bounds);
             }}
           />
           <rect
@@ -83,7 +98,7 @@ export const SelectionBox=memo(({onResizeHandlePointerDown}:SelectionBoxProps)=>
             }}
             onPointerDown={(e) => {
               e.stopPropagation();
-            //   onResizeHandlePointerDown(Side.Top + Side.Right, bounds);
+              onResizeHandlePointerDown(Side.Top + Side.Right, bounds);
             }}
           />
           <rect
@@ -102,7 +117,7 @@ export const SelectionBox=memo(({onResizeHandlePointerDown}:SelectionBoxProps)=>
             }}
             onPointerDown={(e) => {
               e.stopPropagation();
-            //   onResizeHandlePointerDown(Side.Right, bounds);
+              onResizeHandlePointerDown(Side.Right, bounds);
             }}
           />
           <rect
@@ -121,7 +136,7 @@ export const SelectionBox=memo(({onResizeHandlePointerDown}:SelectionBoxProps)=>
             }}
             onPointerDown={(e) => {
               e.stopPropagation();
-            //   onResizeHandlePointerDown(Side.Bottom + Side.Right, bounds);
+              onResizeHandlePointerDown(Side.Bottom + Side.Right, bounds);
             }}
           />
           <rect
@@ -140,7 +155,7 @@ export const SelectionBox=memo(({onResizeHandlePointerDown}:SelectionBoxProps)=>
             }}
             onPointerDown={(e) => {
               e.stopPropagation();
-            //   onResizeHandlePointerDown(Side.Bottom, bounds);
+              onResizeHandlePointerDown(Side.Bottom, bounds);
             }}
           />
           <rect
@@ -159,7 +174,7 @@ export const SelectionBox=memo(({onResizeHandlePointerDown}:SelectionBoxProps)=>
             }}
             onPointerDown={(e) => {
               e.stopPropagation();
-            //   onResizeHandlePointerDown(Side.Bottom + Side.Left, bounds);
+              onResizeHandlePointerDown(Side.Bottom + Side.Left, bounds);
             }}
           />
           <rect
@@ -178,14 +193,13 @@ export const SelectionBox=memo(({onResizeHandlePointerDown}:SelectionBoxProps)=>
             }}
             onPointerDown={(e) => {
               e.stopPropagation();
-            //   onResizeHandlePointerDown(Side.Left, bounds);
+              onResizeHandlePointerDown(Side.Left, bounds);
             }}
           />
         </>
       )}
+    </>
+  );
+});
 
-        </>
-    )
-})
-
-SelectionBox.displayName="SelectionBox"
+SelectionBox.displayName = "SelectionBox";
